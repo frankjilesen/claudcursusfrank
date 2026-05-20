@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Multiply Tool</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f4f8;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 40px;
+      width: 320px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      color: #1a202c;
+      margin-bottom: 8px;
+    }
+
+    p {
+      color: #718096;
+      font-size: 0.9rem;
+      margin-bottom: 28px;
+    }
+
+    input[type="number"] {
+      width: 100%;
+      padding: 12px 16px;
+      font-size: 1.1rem;
+      border: 2px solid #e2e8f0;
+      border-radius: 8px;
+      outline: none;
+      transition: border-color 0.2s;
+      text-align: center;
+    }
+
+    input[type="number"]:focus {
+      border-color: #059669;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    button {
+      flex: 1;
+      padding: 13px;
+      font-size: 1rem;
+      font-weight: bold;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-5 {
+      background: #059669;
+    }
+
+    .btn-5:hover {
+      background: #047857;
+    }
+
+    .btn-2 {
+      background: #4f46e5;
+    }
+
+    .btn-2:hover {
+      background: #4338ca;
+    }
+
+    .btn-div2 {
+      background: #d97706;
+    }
+
+    .btn-div2:hover {
+      background: #b45309;
+    }
+
+    .results {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .result {
+      padding: 16px;
+      border-radius: 8px;
+      display: none;
+    }
+
+    .result-5 {
+      background: #ecfdf5;
+    }
+
+    .result-2 {
+      background: #eef2ff;
+    }
+
+    .result-label {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 6px;
+    }
+
+    .result-5 .result-label {
+      color: #059669;
+    }
+
+    .result-2 .result-label {
+      color: #4f46e5;
+    }
+
+    .result-value {
+      font-size: 2rem;
+      font-weight: bold;
+    }
+
+    .result-5 .result-value {
+      color: #064e3b;
+    }
+
+    .result-2 .result-value {
+      color: #312e81;
+    }
+
+    .result-div2 {
+      background: #fffbeb;
+    }
+
+    .result-div2 .result-label {
+      color: #d97706;
+    }
+
+    .result-div2 .result-value {
+      color: #78350f;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Multiply Tool</h1>
+    <p>Enter a number and press a button</p>
+
+    <input type="number" id="numberInput" placeholder="Enter a number" />
+
+    <div class="buttons">
+      <button class="btn-5" onclick="multiply(5)">× 5</button>
+      <button class="btn-2" onclick="multiply(2)">× 2</button>
+      <button class="btn-div2" onclick="divide()">÷ 2</button>
+    </div>
+
+    <div class="results">
+      <div class="result result-5" id="result5">
+        <div class="result-label">Multiplied by 5</div>
+        <div class="result-value" id="resultValue5"></div>
+      </div>
+      <div class="result result-2" id="result2">
+        <div class="result-label">Multiplied by 2</div>
+        <div class="result-value" id="resultValue2"></div>
+      </div>
+      <div class="result result-div2" id="resultDiv2">
+        <div class="result-label">Divided by 2</div>
+        <div class="result-value" id="resultValueDiv2"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function multiply(factor) {
+      const input = document.getElementById("numberInput");
+      const value = parseFloat(input.value);
+
+      if (input.value === "" || isNaN(value)) {
+        input.style.borderColor = "#e53e3e";
+        input.focus();
+        return;
+      }
+
+      input.style.borderColor = "#e2e8f0";
+
+      const resultBox = document.getElementById("result" + factor);
+      const resultValue = document.getElementById("resultValue" + factor);
+
+      resultValue.textContent = value * factor;
+      resultBox.style.display = "block";
+    }
+
+    function divide() {
+      const input = document.getElementById("numberInput");
+      const value = parseFloat(input.value);
+
+      if (input.value === "" || isNaN(value)) {
+        input.style.borderColor = "#e53e3e";
+        input.focus();
+        return;
+      }
+
+      input.style.borderColor = "#e2e8f0";
+
+      document.getElementById("resultValueDiv2").textContent = value / 2;
+      document.getElementById("resultDiv2").style.display = "block";
+    }
+  </script>
+</body>
+</html>

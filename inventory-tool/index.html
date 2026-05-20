@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Inventory Tool</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f4f8;
+      min-height: 100vh;
+      padding: 40px 16px;
+    }
+
+    .container {
+      max-width: 520px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    h1 {
+      font-size: 1.6rem;
+      color: #1a202c;
+      text-align: center;
+    }
+
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 28px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    }
+
+    .card h2 {
+      font-size: 1rem;
+      color: #4a5568;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 18px;
+    }
+
+    .file-bar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .file-name {
+      flex: 1;
+      font-size: 0.9rem;
+      color: #718096;
+      font-style: italic;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .field {
+      margin-bottom: 14px;
+    }
+
+    label {
+      display: block;
+      font-size: 0.85rem;
+      color: #4a5568;
+      margin-bottom: 6px;
+      font-weight: bold;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 11px 14px;
+      font-size: 1rem;
+      border: 2px solid #e2e8f0;
+      border-radius: 8px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    input[type="text"]:focus { border-color: #4f46e5; }
+    input[type="text"].error { border-color: #e53e3e; }
+
+    button {
+      padding: 11px 20px;
+      font-size: 0.95rem;
+      font-weight: bold;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.2s;
+      white-space: nowrap;
+    }
+
+    .btn-primary { background: #4f46e5; }
+    .btn-primary:hover { background: #4338ca; }
+    .btn-primary:disabled { background: #a5b4fc; cursor: not-allowed; }
+
+    .btn-green { background: #059669; }
+    .btn-green:hover { background: #047857; }
+    .btn-green:disabled { background: #6ee7b7; cursor: not-allowed; }
+
+    .btn-outline {
+      background: white;
+      color: #4f46e5;
+      border: 2px solid #4f46e5;
+    }
+    .btn-outline:hover { background: #eef2ff; }
+
+    .btn-full { width: 100%; margin-top: 4px; }
+
+    .result-box {
+      margin-top: 16px;
+      padding: 16px;
+      border-radius: 8px;
+      display: none;
+    }
+
+    .result-box.success {
+      background: #ecfdf5;
+      color: #065f46;
+    }
+
+    .result-box.error {
+      background: #fff5f5;
+      color: #c53030;
+    }
+
+    .result-label {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 4px;
+      opacity: 0.7;
+    }
+
+    .result-value {
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+
+    .divider {
+      border: none;
+      border-top: 1px solid #e2e8f0;
+      margin: 4px 0 18px;
+    }
+
+    .disabled-overlay {
+      opacity: 0.45;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Inventory Tool</h1>
+
+    <!-- File selection -->
+    <div class="card">
+      <h2>Database File</h2>
+      <div class="file-bar">
+        <span class="file-name" id="fileName">No file selected</span>
+        <button class="btn-outline" onclick="openFile()">Open existing</button>
+        <button class="btn-primary" onclick="newFile()">New file</button>
+      </div>
+    </div>
+
+    <!-- Add item -->
+    <div class="card disabled-overlay" id="addCard">
+      <h2>Add Item</h2>
+      <hr class="divider" />
+      <div class="field">
+        <label for="addSerial">Serial Number</label>
+        <input type="text" id="addSerial" placeholder="e.g. SN-00123" />
+      </div>
+      <div class="field">
+        <label for="addLocation">Location</label>
+        <input type="text" id="addLocation" placeholder="e.g. Warehouse A, Shelf 3" />
+      </div>
+      <button class="btn-green btn-full" onclick="addItem()">Add to Database</button>
+      <div class="result-box" id="addResult">
+        <div class="result-label">Status</div>
+        <div class="result-value" id="addResultText"></div>
+      </div>
+    </div>
+
+    <!-- Lookup item -->
+    <div class="card disabled-overlay" id="lookupCard">
+      <h2>Find Location</h2>
+      <hr class="divider" />
+      <div class="field">
+        <label for="lookupSerial">Serial Number</label>
+        <input type="text" id="lookupSerial" placeholder="e.g. SN-00123" />
+      </div>
+      <button class="btn-primary btn-full" onclick="lookupItem()">Search</button>
+      <div class="result-box" id="lookupResult">
+        <div class="result-label" id="lookupResultLabel">Location</div>
+        <div class="result-value" id="lookupResultText"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let fileHandle = null;
+
+    function unlock() {
+      document.getElementById("addCard").classList.remove("disabled-overlay");
+      document.getElementById("lookupCard").classList.remove("disabled-overlay");
+    }
+
+    async function openFile() {
+      try {
+        [fileHandle] = await window.showOpenFilePicker({
+          types: [{ description: "Text file", accept: { "text/plain": [".txt"] } }]
+        });
+        document.getElementById("fileName").textContent = fileHandle.name;
+        document.getElementById("fileName").style.color = "#1a202c";
+        unlock();
+      } catch (e) {
+        if (e.name !== "AbortError") alert("Could not open file: " + e.message);
+      }
+    }
+
+    async function newFile() {
+      try {
+        fileHandle = await window.showSaveFilePicker({
+          suggestedName: "inventory.txt",
+          types: [{ description: "Text file", accept: { "text/plain": [".txt"] } }]
+        });
+        const writable = await fileHandle.createWritable();
+        await writable.write("");
+        await writable.close();
+        document.getElementById("fileName").textContent = fileHandle.name;
+        document.getElementById("fileName").style.color = "#1a202c";
+        unlock();
+      } catch (e) {
+        if (e.name !== "AbortError") alert("Could not create file: " + e.message);
+      }
+    }
+
+    async function readEntries() {
+      const file = await fileHandle.getFile();
+      const text = await file.text();
+      const entries = {};
+      for (const line of text.split("\n")) {
+        const trimmed = line.trim();
+        if (!trimmed) continue;
+        const sep = trimmed.indexOf("|");
+        if (sep === -1) continue;
+        const serial = trimmed.slice(0, sep).trim().toUpperCase();
+        const location = trimmed.slice(sep + 1).trim();
+        entries[serial] = location;
+      }
+      return entries;
+    }
+
+    async function writeEntries(entries) {
+      const lines = Object.entries(entries).map(([s, l]) => `${s}|${l}`).join("\n");
+      const writable = await fileHandle.createWritable();
+      await writable.write(lines);
+      await writable.close();
+    }
+
+    function showResult(boxId, textId, message, type) {
+      const box = document.getElementById(boxId);
+      box.className = "result-box " + type;
+      box.style.display = "block";
+      document.getElementById(textId).textContent = message;
+    }
+
+    async function addItem() {
+      const serialEl = document.getElementById("addSerial");
+      const locationEl = document.getElementById("addLocation");
+      const serial = serialEl.value.trim().toUpperCase();
+      const location = locationEl.value.trim();
+
+      serialEl.classList.remove("error");
+      locationEl.classList.remove("error");
+
+      if (!serial) { serialEl.classList.add("error"); serialEl.focus(); return; }
+      if (!location) { locationEl.classList.add("error"); locationEl.focus(); return; }
+      if (serial.includes("|") || location.includes("|")) {
+        showResult("addResult", "addResultText", "Serial number and location cannot contain the | character.", "error");
+        return;
+      }
+
+      try {
+        const entries = await readEntries();
+        const isUpdate = serial in entries;
+        entries[serial] = location;
+        await writeEntries(entries);
+        serialEl.value = "";
+        locationEl.value = "";
+        showResult("addResult", "addResultText",
+          isUpdate ? `Updated: ${serial} → ${location}` : `Added: ${serial} → ${location}`,
+          "success");
+      } catch (e) {
+        showResult("addResult", "addResultText", "Error writing file: " + e.message, "error");
+      }
+    }
+
+    async function lookupItem() {
+      const serialEl = document.getElementById("lookupSerial");
+      const serial = serialEl.value.trim().toUpperCase();
+
+      serialEl.classList.remove("error");
+
+      if (!serial) { serialEl.classList.add("error"); serialEl.focus(); return; }
+
+      try {
+        const entries = await readEntries();
+        if (serial in entries) {
+          showResult("lookupResult", "lookupResultText", entries[serial], "success");
+          document.getElementById("lookupResultLabel").textContent = "Location";
+        } else {
+          showResult("lookupResult", "lookupResultText", `"${serial}" not found in database.`, "error");
+        }
+      } catch (e) {
+        showResult("lookupResult", "lookupResultText", "Error reading file: " + e.message, "error");
+      }
+    }
+
+    document.getElementById("addSerial").addEventListener("keydown", e => { if (e.key === "Enter") document.getElementById("addLocation").focus(); });
+    document.getElementById("addLocation").addEventListener("keydown", e => { if (e.key === "Enter") addItem(); });
+    document.getElementById("lookupSerial").addEventListener("keydown", e => { if (e.key === "Enter") lookupItem(); });
+  </script>
+</body>
+</html>

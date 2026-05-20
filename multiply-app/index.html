@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Multiply by 2</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f4f8;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 40px;
+      width: 320px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      color: #1a202c;
+      margin-bottom: 8px;
+    }
+
+    p {
+      color: #718096;
+      font-size: 0.9rem;
+      margin-bottom: 28px;
+    }
+
+    input[type="number"] {
+      width: 100%;
+      padding: 12px 16px;
+      font-size: 1.1rem;
+      border: 2px solid #e2e8f0;
+      border-radius: 8px;
+      outline: none;
+      transition: border-color 0.2s;
+      text-align: center;
+    }
+
+    input[type="number"]:focus {
+      border-color: #4f46e5;
+    }
+
+    button {
+      margin-top: 16px;
+      width: 100%;
+      padding: 13px;
+      font-size: 1rem;
+      font-weight: bold;
+      color: white;
+      background: #4f46e5;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    button:hover {
+      background: #4338ca;
+    }
+
+    .result {
+      margin-top: 24px;
+      padding: 16px;
+      background: #eef2ff;
+      border-radius: 8px;
+      display: none;
+    }
+
+    .result-label {
+      font-size: 0.85rem;
+      color: #6366f1;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 6px;
+    }
+
+    .result-value {
+      font-size: 2rem;
+      font-weight: bold;
+      color: #312e81;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Multiply by 2</h1>
+    <p>Enter a number and press the button</p>
+
+    <input type="number" id="numberInput" placeholder="Enter a number" />
+    <button onclick="multiply()">Calculate</button>
+
+    <div class="result" id="result">
+      <div class="result-label">Result</div>
+      <div class="result-value" id="resultValue"></div>
+    </div>
+  </div>
+
+  <script>
+    function multiply() {
+      const input = document.getElementById("numberInput");
+      const value = parseFloat(input.value);
+
+      if (input.value === "" || isNaN(value)) {
+        input.style.borderColor = "#e53e3e";
+        input.focus();
+        return;
+      }
+
+      input.style.borderColor = "#e2e8f0";
+
+      const resultBox = document.getElementById("result");
+      const resultValue = document.getElementById("resultValue");
+
+      resultValue.textContent = value * 2;
+      resultBox.style.display = "block";
+    }
+
+    document.getElementById("numberInput").addEventListener("keydown", function (e) {
+      if (e.key === "Enter") multiply();
+    });
+  </script>
+</body>
+</html>
